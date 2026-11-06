@@ -1,0 +1,22 @@
+# Local secrets and configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+.databrickscfg
+
+# Local/runtime outputs and personal captures
+screenshots/
+outputs/
+*.log
+__pycache__/
+.pytest_cache/
+.DS_Store
+
+# Local tooling
+.idea/
+.vscode/
+.venv/
