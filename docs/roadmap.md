@@ -14,7 +14,7 @@
 | Batch orchestration | `databricks.yml` and `resources/job.yml` | Bundle validate/deploy/run pending |
 | Streaming ingestion | Separate Auto Loader pipeline | Pending pipeline configuration |
 | Optimization and governance | `sql/70–72`, policies and operational docs | Not benchmarked or deployed |
-| Continuous integration | GitHub Actions and Python tests | CI failing; investigate using `docs/ci_triage.md` |
+| Continuous integration | GitHub Actions and Python tests | Runner blocked before test execution; see `docs/ci_triage.md` |
 
 ## Next execution sequence
 

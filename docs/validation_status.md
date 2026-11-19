@@ -13,7 +13,7 @@ As of 2026-11-19:
 | AUTO CDC / Auto Loader | Example pipeline sources prepared | **Not configured/executed** |
 | Declarative bundle | YAML definition prepared | **CLI validate/deploy pending** |
 | Data quality in Spark | Python quality gates prepared | **Integration test pending** |
-| Static Python checks | GitHub workflow run failed twice; logs unavailable | **CI failing; see [CI triage](ci_triage.md)** |
+| Static Python checks | GitHub runner blocked before tests started; no test results | **CI not executed; see [CI status](ci_triage.md)** |
 | Performance benchmarks | No timing or query-profile evidence | **Not measured** |
 | Governance controls | Read-only samples and guide | **Not deployed** |
 

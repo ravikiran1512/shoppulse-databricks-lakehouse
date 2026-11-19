@@ -94,7 +94,7 @@ See the [operator runbook](docs/runbook.md) for detailed manual and automated st
 
 - **Observed in a Databricks workspace:** 99,441 orders ingested, 99,441 distinct order IDs, and a repeated `COPY INTO` invocation leaving the row count unchanged.
 - **Implemented, not yet live-verified:** expanded multi-file loads, Silver/Gold outputs, job bundle deployment, streaming CDC pipeline and performance measurements.
-- **CI:** GitHub Actions runs are currently failing without retrievable step logs; investigation is documented in [CI triage](docs/ci_triage.md). This is **not** presented as a passing test suite.
+- **CI:** GitHub Actions jobs have been blocked before test execution by an account-level restriction; no test results are available. See the [CI status](docs/ci_triage.md). This is **not** presented as a passing test suite.
 
 All synthetic feed generators use deterministic seeds. Automated checks cover key uniqueness, item referential integrity, and invalid amounts. For operational limitations and future hardening, see [engineering capabilities](docs/engineering_capabilities.md) and [implementation plan](docs/roadmap.md).
 
