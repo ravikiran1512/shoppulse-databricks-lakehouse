@@ -1,33 +1,19 @@
-# Verified learning log
+# Verified learning log & implementation record
 
-## Module 1, Lesson 1 — Databricks SQL basics
+## Completed earlier in Databricks Free Edition
+- **Module 1, Lesson 1:** `workspace.default.orders_raw` Delta table, seven synthetic orders, daily `COUNT(*)`/`SUM`/`COUNT(DISTINCT)` results matching the exercise; certification quiz 2/3.
+- **Module 1, Lesson 2:** `DESCRIBE DETAIL` and `DESCRIBE HISTORY`; `UPDATE` created table version 2; order 9001 shown as Delivered currently and Pending using `VERSION AS OF 1`; certification quiz 2/3.
+- **Module 1, Lesson 3:** three UC schemas created (`shoppulse_bronze` / `silver` / `gold`); original Olist orders source profiled at 99,441 total and unique order IDs; `COPY INTO` uploaded same count to `workspace.shoppulse_bronze.olist_orders_raw` and second invocation did not duplicate rows.
+- **Module 1, Lesson 3, Exercise 3D:** ingestion and profiling of order items was assigned, **not yet reported complete**.
 
-**Completed in the student's Databricks Free Edition workspace.**
+## This repository expansion — November 19, 2026
+- Authored batch ingestion for eight Olist CSVs, Bronze table DDL, Silver cleaning/quarantine, Gold facts and business metrics.
+- Added a Spark SQL runner with data-contract quality gates, bundle workflow, static CI, analytic SQL and optional synthetic inventory + CDC + Lakeflow examples.
+- Added data contracts, architecture, security/operations documentation, runbook and revised Oct 9, 2026 exam mapping.
 
-- Created `workspace.default.orders_raw` as a Delta table.
-- Inserted 7 fictional orders.
-- Wrote a `Delivered`-only daily aggregation using `COUNT(*)`, `SUM(amount)`, `COUNT(DISTINCT customer_id)`, `WHERE`, `GROUP BY`, and `ORDER BY`.
-- Observed the expected daily result: 450.00, 450.00, 120.00, with order counts 2, 2, 1.
-- Quiz: 2/3 correct. Area to review: purpose of Delta Lake versus traditional databases.
+## Next validation milestone
+Upload remaining Olist CSVs to the existing Bronze volume, then execute the SQL files in runbook order. Capture quarantined counts, Gold grain checks, actual bundle validation and any runtime errors. Commit **verified fixes** and report measured outputs; avoid fictitious success metrics.
 
-## Module 1, Lesson 2 — Delta Lake history
+### Source data notice
+The downloaded Kaggle source files are on the learner's computer/workspace; they were **not** uploaded into this ChatGPT session and are not available for direct execution here.
 
-**Completed in the student's Databricks Free Edition workspace.**
-
-- Used `DESCRIBE DETAIL` to verify Delta format for `workspace.default.orders_raw`.
-- Observed initial history version 1, operation `WRITE`.
-- Created `workspace.default.orders_history_practice_01` and inserted two fictional orders.
-- Updated order 9001 from `Pending` to `Delivered`.
-- Confirmed an `UPDATE` at version 2 with `numUpdatedRows = 1`.
-- Queried current state (`Delivered`) and version 1 (`Pending`) without restoring the table.
-- Quiz: 2/3 correct. Area to review: atomicity (a failed transaction does not partially commit).
-
-## Current limitations
-
-- No automated CI or large-scale pipeline has been implemented yet.
-- The checked-in SQL standardizes examples under `shoppulse_dev`, whereas hands-on results were observed in `workspace.default`.
-- History outputs were intentionally summarized to avoid exposing account information.
-
-## Next checkpoint
-
-Module 1, Lesson 3: Medallion architecture, data grain, and the first Bronze/Silver/Gold schema design.

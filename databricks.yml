@@ -1,0 +1,19 @@
+# Declarative Automation Bundle (formerly Databricks Asset Bundle).
+bundle:
+  name: shoppulse_lakehouse
+
+include:
+  - resources/*.yml
+
+variables:
+  catalog:
+    description: Writable Unity Catalog catalog where ShopPulse schemas live
+    default: workspace
+
+targets:
+  dev:
+    default: true
+    mode: development
+  prod:
+    mode: production
+

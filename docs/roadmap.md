@@ -1,20 +1,21 @@
-# Databricks Data Engineer Professional project roadmap
+# ShopPulse completion and certification roadmap (updated Nov 2026)
 
-Each milestone adds reproducible SQL/code and tests, followed by an interview-ready explanation and three certification-style questions.
+The **full reference implementation is checked in**, while full end-to-end verification remains outstanding.
 
-| Milestone | Real engineering outcome | Status |
-| --- | --- | --- |
-| 1. Databricks SQL and Delta fundamentals | Create, query, update, inspect history, and time travel | Completed in learning workspace |
-| 2. Medallion design | Business requirements, data grain, Bronze/Silver/Gold contracts | Next |
-| 3. Ingestion | CSV/JSON/Parquet, Auto Loader, schema evolution | Planned |
-| 4. Data quality | Deduplication, SQL validations, expectations, quarantine | Planned |
-| 5. CDC and incremental updates | MERGE, AUTO CDC, SCD Types 1 and 2, late events | Planned |
-| 6. Analytics models | Dimensional model, revenue, fulfillment, returns and cohorts | Planned |
-| 7. Batch and streaming | Lakeflow Declarative Pipelines, streaming tables, materialized views | Planned |
-| 8. Optimization | Query profile, liquid clustering, pruning, benchmark evidence | Planned |
-| 9. Governance | Unity Catalog privileges, lineage, masking, sharing | Planned |
-| 10. Operational engineering | Lakeflow Jobs, monitoring, retry/repair, alerts | Planned |
-| 11. Deployment and testing | SQL/PySpark tests, Databricks CLI, Asset Bundles, CI/CD | Planned |
-| 12. Certification readiness | Production scenarios, mock exam, final portfolio walkthrough | Planned |
+| Milestone | Repository deliverable | Workspace verification |
+|---|---|---|
+| Foundational SQL and Delta history | `sql/01–03`, original docs | Learner verified |
+| Full Bronze ingestion (8 CSVs) | `sql/10–12` | Orders done earlier; remaining inputs pending |
+| Silver cleaning and quarantine | `sql/20–23` | Pending |
+| Gold dimensional/analytical tables | `sql/30–31` | Pending |
+| Monitoring and quality checks | `runner.py`, `sql/40–41` | Pending |
+| Warehouse net movement simulation | generator, `sql/60` | Pending |
+| Incremental CDC and SCD | `sql/61`, Lakeflow AUTO CDC example | Pending |
+| Batch orchestration | `databricks.yml`, `resources/job.yml` | Pending bundle validate/run |
+| Streaming ingestion | Lakeflow Auto Loader example | Pending pipeline setup |
+| Performance, VARIANT, security | `sql/70–72` and docs | Conceptual/optional exercises |
+| CI/test foundation | GitHub Actions, stdlib tests | Confirm GitHub workflow on first commit |
+| Professional exam map | `docs/exam_matrix.md` | Full nine-domain plan, not a completion claim |
 
-Some enterprise governance, federation, and administration scenarios may be unavailable in Databricks Free Edition and will require a supported workspace or a documented conceptual exercise.
+Further enterprise subjects (Lakehouse Federation, Clean Rooms, controlled ABAC deployments, REST/SDK, real CDC connectors, advanced incident response and large-scale profiling) are deliberately marked **not deployed**. The exam mapping describes how to study them, rather than misrepresenting exercise code as production operations.
+

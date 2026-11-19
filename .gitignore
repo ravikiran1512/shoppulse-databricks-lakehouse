@@ -1,22 +1,37 @@
-# Local secrets and configuration
+# Credentials and private configuration
 .env
 .env.*
 !.env.example
+.databrickscfg
 *.pem
 *.key
 *.p12
 *.pfx
-.databrickscfg
-
-# Local/runtime outputs and personal captures
-screenshots/
-outputs/
-*.log
-__pycache__/
-.pytest_cache/
-.DS_Store
-
-# Local tooling
-.idea/
-.vscode/
+.secrets/
+# Real customer and source data must not be committed
+data/raw/
+data/generated/
+data/olist/
+*.csv
+*.csv.gz
+*.parquet
+*.jsonl
+*.zip
+# Local artifacts
 .venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.vscode/
+.idea/
+.DS_Store
+outputs/
+screenshots/
+*.log
+# Deployment outputs
+.databricks/
+dist/
+build/
+

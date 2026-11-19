@@ -1,0 +1,22 @@
+name: ShopPulse static and unit tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile Python source
+        run: python -m compileall -q src tests pipelines
+      - name: Unit tests (no Spark required)
+        run: python -m unittest discover -s tests -v
+
+# Deliberately NO Databricks deployment in public CI.
+# Add restricted credentials and approval gates before enabling deployment.
+

@@ -1,74 +1,76 @@
-# ShopPulse — Databricks SQL Data Engineering Project
+# ShopPulse | Databricks Lakehouse Data Engineering
 
-An evolving, hands-on portfolio project for learning **Databricks SQL, Delta Lake, and production data engineering**, aligned with the Databricks Certified Data Engineer Professional learning objectives.
+**An end-to-end retail lakehouse reference project** using Databricks SQL, Delta Lake, Unity Catalog, PySpark, Lakeflow patterns, tests, and deployment-as-code. Designed for a data engineering GitHub portfolio and the **Databricks Certified Data Engineer Professional** exam (October 9, 2026 outline).
 
-> **Status: Module 1, Lessons 1–2 complete.** This is a learning-in-progress repository, not a completed production pipeline.
+> **Honest status:** Core batch ingestion, Medallion transformations, dimensional Gold models, orchestration definition, quality gates, and certification labs are implemented in this repository. The first 99,441 Olist orders were previously ingested and verified in the learner's Databricks Free Edition workspace. The expanded end-to-end run, deployment, performance results, and optional streaming/CDC labs **have not yet been executed or validated in that workspace**. Local static/stdlib tests are separate from Spark integration testing. This is not a claimed production deployment.
 
-## Business problem
+## Business scenario
+ShopPulse (fictional retailer) must reconcile marketplace orders, order items, payment records, deliveries, product catalog, seller and customer reference data. An additional **synthetic** warehouse feed supports inventory changes, duplicates, out-of-order updates, and incident simulations. The historical Olist data covers 2016–2018; these are not present-day transactions.
 
-ShopPulse is a fictional e-commerce retailer. Operations and finance teams need dependable reporting on orders, revenue, delivery, cancellations, and returns. The eventual goal is a governed, incremental Bronze/Silver/Gold lakehouse that handles duplicate events, late-arriving updates, and historical changes.
+## Architecture
 
-The first milestone uses seven synthetic orders to demonstrate SQL reporting and Delta transaction history.
-
-## Tools
-
-- Databricks Free Edition and Databricks SQL Editor
-- Spark SQL and Delta Lake
-- Unity Catalog (catalog, schema, table organization)
-- Planned later: Auto Loader, Lakeflow, Delta CDC, Jobs, monitoring, governance, and Databricks Asset Bundles
-
-No credentials, real customer data, or workspace screenshots are included.
-
-## Repository structure
-
-```text
-sql/
-  01_setup_and_seed.sql       Create a Delta table and insert seven test orders
-  02_daily_revenue.sql        Delivered-order daily revenue query
-  03_delta_history_lab.sql   Isolated UPDATE and time-travel practice
-docs/
-  architecture.md            Proposed lakehouse architecture (not implemented yet)
-  learning_log.md            Verified work and learning progress
-  roadmap.md                 Next stages toward the professional certification
+```mermaid
+flowchart LR
+    O["Olist CSVs (8 files)"] --> V["Unity Catalog Volume"]
+    V -->|COPY INTO, file tracking| B["Bronze Delta (raw strings + provenance)"]
+    B -->|SQL TRY_CAST, row_number, validation| S["Silver typed, deduped + rejected"]
+    S -->|fact / dimensions / aggregate| G["Gold BI-ready Delta"]
+    G --> D["Databricks SQL queries / dashboards"]
+    I["Synthetic inventory JSONL"] --> BI["Separate inventory Bronze / Silver / Gold lab"]
+    C["Synthetic CDC"] --> L["Optional Lakeflow AUTO CDC SCD2"]
 ```
 
-## Reproduce the first two lessons
+**Important distinctions:** File-level idempotency is not record-level deduplication. Payment rows and order-item rows are both 1:N for each order; joining them directly before aggregation inflates sums. Olist uses **BRL** and our `item_sales_brl` represents delivered-order item merchandise value, **not legally recognized revenue** or net profit.
 
-1. Open **SQL Editor** in a Databricks workspace and select a writable Unity Catalog workspace catalog.
-2. Create a **new query tab**. Run each statement separately, not the entire file repeatedly.
-3. Run `sql/01_setup_and_seed.sql` once. It creates a dedicated `shoppulse_dev` schema and a managed Delta table. **Do not rerun its INSERT**; that would duplicate the sample rows.
-4. Run `sql/02_daily_revenue.sql` and compare the output below.
-5. Use a second query tab to follow `sql/03_delta_history_lab.sql`, one statement at a time. **Do not recreate or reseed its practice table after the first successful run.**
+## Quick start: reproducible batch pipeline
 
-The original learning session used `workspace.default.orders_raw` and `workspace.default.orders_history_practice_01`. The checked-in scripts use `shoppulse_dev` to offer a cleaner, reproducible project layout. These organized-schema scripts have not yet been executed against that schema.
+1. Get **all eight original CSV files** from [Olist on Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce). **Do not commit the dataset**. The initial learner exercise already has orders and order items; upload the other six as well.
+2. In Databricks Free Edition, select a writable Unity Catalog catalog (the examples use `workspace`).
+3. Run `sql/10_bronze_setup.sql` with `{{catalog}}` replaced by `workspace`. This creates the three Medallion schemas, a managed volume, and eight Bronze Delta tables. Existing lesson tables remain untouched.
+4. Upload the CSV files with **Catalog Explorer → workspace → shoppulse_bronze → source_files → Upload to volume**, keeping the original file names.
+5. Run `sql/11_bronze_copy_into.sql`. Re-running the same files normally skips them. Then run `sql/12_bronze_audit.sql`.
+6. Run Silver scripts `20` → `21` → `22` → `23` in order, **in the same SQL Editor session** (temporary views are used by the `20` and `21` scripts). SQL Editor may execute statements individually, so keep each script's statements in the same session.
+7. Run Gold scripts `sql/30_gold_model.sql` then `sql/31_gold_metrics.sql`, followed by monitoring and analytic queries in `sql/40_monitoring_checks.sql` and `sql/41_analytics_queries.sql`.
+8. Optional: run the automated Spark Python workflow after configuring the Databricks CLI and checking your workspace supports serverless Jobs: `databricks bundle validate -t dev`, `databricks bundle deploy -t dev`, `databricks bundle run shoppulse_batch -t dev`. Never deploy before uploading all eight CSV files and confirming the target catalog.
 
-### Expected daily revenue result
+For a detailed annotated walkthrough, see [runbook](docs/runbook.md). All `sql/10–41` scripts are templates: `{{catalog}}` is substituted by `src/shoppulse/runner.py` or replaced manually in SQL Editor. Historical `sql/01–03` lessons use a fixed `shoppulse_dev` schema and are preserved.
 
-Only `Delivered` orders count toward these figures; `amount` represents the total order amount in this introductory fixture.
+## Project tree
 
-| order_date | total_orders | total_revenue | unique_customers |
-| --- | ---: | ---: | ---: |
-| 2026-11-01 | 2 | 450.00 | 2 |
-| 2026-11-02 | 2 | 450.00 | 2 |
-| 2026-11-03 | 1 | 120.00 | 1 |
+```text
+.github/workflows/ci.yml    Static Python compile + unit tests (no workspace secrets)
+databricks.yml              Declarative Automation Bundle
+resources/job.yml           Four-stage serverless batch workflow
+src/shoppulse/runner.py     CLI-oriented Spark SQL orchestration and quality gates
+sql/01–03                  Historical learner exercises
+sql/10–12                  Bronze setup, COPY INTO, profile
+sql/20–23                  Silver clean/invalid quarantine and reference tables
+sql/30–31                  Gold facts, dimensions, metrics
+sql/40–41                  Monitoring and analytics
+sql/60–61                  Synthetic warehouse and MERGE CDC labs
+sql/70–72                  Performance, governance, VARIANT, AI examples
+pipelines/                 Optional Lakeflow streaming and SCD2 AUTO CDC examples
+tools/                     Reproducible synthetic event generators
+tests/                     Pure Python tests (NOT Spark integration tests)
+docs/                      Architecture, data contracts, runbook, incident playbook,
+                           certification matrix, governance, progress and caveats
+```
 
-**Important modeling note:** In later lessons we will calculate financial metrics from the correct order-item/payment grain, handle refunds and currency, and add data quality checks. The sample metric is intentionally simplified.
+## Expected verification, not fake benchmarks
+- **Previously observed:** Bronze Olist orders = 99,441 rows; distinct non-null order IDs = 99,441; re-running original `COPY INTO` left the row count unchanged.
+- **Upstream reference:** Olist order items commonly contain 112,650 rows, but verify **your own uploaded data**, not a copied result.
+- **Not yet confirmed:** all eight sources loaded; Silver/Gold validation and runtime performance; Lakeflow execution; CI workflow result on this commit.
+- **Known deliberate issues:** quarantines are derived by SQL; synthetic warehouse contains a duplicate, invalid amount, and updated event version. A full live job run is needed to verify exact rejected counts.
 
-## Evidence and status
+## Professional certification coverage
+Updated for the official [Oct 9, 2026 Professional exam guide](https://www.databricks.com/sites/default/files/2026-10/Databricks-Certified-Data-Engineer-Professional-Exam-Guide-9-Oct-2026.pdf) (**9 domains, 60 scored questions, 120 minutes**). The nine domain-to-project mappings and feature gaps are detailed in [docs/exam_matrix.md](docs/exam_matrix.md).
 
-The student ran the initial queries in Databricks Free Edition and verified:
+## Safety, compliance and reproducibility
+- Olist is third-party data: download from its original source and review its terms; **do not commit raw data**, personal details, or tokens.
+- `.gitignore` protects local credentials and generated files; also review `git diff` before publishing.
+- This repository is a portfolio implementation with isolated training examples, not a substitute for an operated, production-level SLA environment.
+- A proper production system would require CI with a workspace integration environment, secret management, least privilege, freshness checks, deletion policy, monitoring, CDC replay strategy, and verified recovery runbooks.
 
-- A Delta-format managed table with seven sample orders.
-- The exact three-row daily revenue result shown above.
-- A Delta UPDATE that changed one order and committed a new table version.
-- A time-travel query that returned the original order status without restoring the table.
+## Start here
+[Runbook](docs/runbook.md) · [Architecture](docs/architecture.md) · [Data dictionary](docs/data_dictionary.md) · [Exam matrix](docs/exam_matrix.md) · [Operations](docs/operations.md) · [Progress](docs/learning_log.md)
 
-See [the learning log](docs/learning_log.md) for the detailed checkpoint. Results were observed in the student's workspace; this repository does not yet include automated integration tests or CI.
-
-## Security and reproducibility
-
-All data is fictional. Never commit Databricks access tokens, `.env` files, full `DESCRIBE HISTORY` output containing account identifiers, or raw personal screenshots. Future examples should use sanitized metadata and parameterized workspace configuration.
-
-## Next milestone
-
-Design a Bronze/Silver/Gold model, introduce realistic e-commerce source tables, and build SQL validation rules. See [the roadmap](docs/roadmap.md).
