@@ -1,4 +1,4 @@
--- ShopPulse, Module 1 / Lesson 1
+-- ShopPulse: initial Delta order dataset and SQL baseline
 -- Select YOUR WRITABLE WORKSPACE CATALOG in Databricks SQL Editor first.
 -- Run these statements individually, in order.
 -- The INSERT must only be run once on an EMPTY table.

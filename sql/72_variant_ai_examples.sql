@@ -1,4 +1,4 @@
--- Certification extension: VARIANT for semi-structured payloads.
+-- Semi-structured JSON handling with Delta SQL VARIANT.
 SELECT parse_json('{"event_id":"S1","source":{"app":"shop"},"total":129.50}') AS payload;
 
 SELECT variant_get(

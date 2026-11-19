@@ -1,4 +1,4 @@
--- ShopPulse, Module 1 / Lesson 2
+-- ShopPulse: isolated Delta transaction history and time-travel validation
 -- Separate, disposable *practice* table, not production orders_raw.
 -- Start with a fresh table. Run each statement individually and only once.
 -- If the CREATE says the table already exists, stop rather than replacing it.

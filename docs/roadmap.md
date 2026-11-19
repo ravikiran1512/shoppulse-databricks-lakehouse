@@ -1,21 +1,31 @@
-# ShopPulse completion and certification roadmap (updated Nov 2026)
+# ShopPulse implementation and operationalization plan
 
-The **full reference implementation is checked in**, while full end-to-end verification remains outstanding.
+**Current phase:** A multi-source retail lakehouse implementation is committed. The primary remaining work is execution, reconciliation, troubleshooting and performance measurement in a supported Databricks workspace.
 
-| Milestone | Repository deliverable | Workspace verification |
+| Workstream | Repository deliverable | Runtime status |
 |---|---|---|
-| Foundational SQL and Delta history | `sql/01–03`, original docs | Learner verified |
-| Full Bronze ingestion (8 CSVs) | `sql/10–12` | Orders done earlier; remaining inputs pending |
-| Silver cleaning and quarantine | `sql/20–23` | Pending |
-| Gold dimensional/analytical tables | `sql/30–31` | Pending |
-| Monitoring and quality checks | `runner.py`, `sql/40–41` | Pending |
-| Warehouse net movement simulation | generator, `sql/60` | Pending |
-| Incremental CDC and SCD | `sql/61`, Lakeflow AUTO CDC example | Pending |
-| Batch orchestration | `databricks.yml`, `resources/job.yml` | Pending bundle validate/run |
-| Streaming ingestion | Lakeflow Auto Loader example | Pending pipeline setup |
-| Performance, VARIANT, security | `sql/70–72` and docs | Conceptual/optional exercises |
-| CI/test foundation | GitHub Actions, stdlib tests | Confirm GitHub workflow on first commit |
-| Professional exam map | `docs/exam_matrix.md` | Full nine-domain plan, not a completion claim |
+| SQL and Delta reference queries | `sql/01–03` | Verified against example tables |
+| Bronze ingestion | `sql/10–12`, eight Olist source contracts | Original orders file verified; remaining sources pending |
+| Silver cleaning and quarantine | `sql/20–23` | Needs full Databricks run |
+| Gold dimensional and analytical models | `sql/30–31` | Needs output verification |
+| Monitoring and data quality | `runner.py` and `sql/40–41` | Pending live task validation |
+| Warehouse movement simulation | Deterministic generator and `sql/60` | Pending |
+| Incremental changes and history | `sql/61` and Lakeflow `AUTO CDC` example | Pending |
+| Batch orchestration | `databricks.yml` and `resources/job.yml` | Bundle validate/deploy/run pending |
+| Streaming ingestion | Separate Auto Loader pipeline | Pending pipeline configuration |
+| Optimization and governance | `sql/70–72`, policies and operational docs | Not benchmarked or deployed |
+| Continuous integration | GitHub Actions and Python tests | CI failing; investigate using `docs/ci_triage.md` |
 
-Further enterprise subjects (Lakehouse Federation, Clean Rooms, controlled ABAC deployments, REST/SDK, real CDC connectors, advanced incident response and large-scale profiling) are deliberately marked **not deployed**. The exam mapping describes how to study them, rather than misrepresenting exercise code as production operations.
+## Next execution sequence
+
+1. Confirm all eight Olist source CSV files are present under the configured Unity Catalog volume.
+2. Execute Bronze loads, audit counts, and verify file-level rerun safety.
+3. Build Silver and Gold datasets; validate uniqueness, payment reconciliation and quarantine counts.
+4. Run the Job bundle in a development environment and document any configuration or SQL fixes.
+5. Verify the CI runner, then add workspace-based integration tests without exposing secrets.
+6. Configure and observe inventory/CDC and streaming examples as distinct workloads.
+7. Benchmark representative queries and document **measured** optimization results.
+8. Publish sanitized technical evidence, accurate architecture diagrams and a clear operational status.
+
+The [capability register](engineering_capabilities.md) details code coverage, limitations, and production hardening. A compliant enterprise rollout would additionally require authenticated connectors, approved privacy and security policies, deployment approval, reliability monitoring, and incident response.
 

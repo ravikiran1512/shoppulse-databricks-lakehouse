@@ -1,6 +1,6 @@
 -- ShopPulse Bronze initialization. SQL templates: replace {{catalog}} with your catalog
 -- in SQL Editor, or run through src/shoppulse/runner.py.
--- Non-destructive: never drops the existing learning tables.
+-- Non-destructive: does not drop existing project reference tables.
 CREATE SCHEMA IF NOT EXISTS {{catalog}}.shoppulse_bronze;
 CREATE SCHEMA IF NOT EXISTS {{catalog}}.shoppulse_silver;
 CREATE SCHEMA IF NOT EXISTS {{catalog}}.shoppulse_gold;

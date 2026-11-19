@@ -4,9 +4,9 @@ As of 2026-11-19:
 
 | Check | Evidence | Status |
 |---|---|---|
-| Previous orders file uploaded to Bronze | Learner executed `COPY INTO`, exact 99,441 count | **Observed in Databricks earlier** |
-| Orders rerun idempotency | Learner reran: 99,441 distinct orders, one source file | **Observed in Databricks earlier** |
-| Delta UPDATE / time travel lesson | Delivered current vs Pending version 1 | **Observed in Databricks earlier** |
+| Previous orders file uploaded to Bronze | Previously executed `COPY INTO`, exact 99,441 count | **Observed in Databricks earlier** |
+| Orders rerun idempotency | Previously reran: 99,441 distinct orders, one source file | **Observed in Databricks earlier** |
+| Delta UPDATE / time-travel verification | Delivered current vs Pending version 1 | **Observed in Databricks earlier** |
 | Expanded eight-file ingestion | New SQL scripts committed | **Not run in Databricks** |
 | Silver/Gold CTAS | Implemented; no runtime results | **Not run in Databricks** |
 | Synthetic inventory | Deterministic generator and SQL files provided | **Not run against Databricks** |

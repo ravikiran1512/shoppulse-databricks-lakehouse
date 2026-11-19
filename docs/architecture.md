@@ -42,13 +42,13 @@
 
 ## Batch vs streaming
 - **Default working path:** `COPY INTO` (batch) → deterministic CTAS Silver/Gold → quality gates in a four-task Lakeflow Job bundle.
-- **Optional advanced exam labs:** Auto Loader and Lakeflow expectations for incremental JSON, plus `AUTO CDC` SCD2 on synthetic preferences. They are kept separate from the batch source path and need a configured Lakeflow Pipeline to run.
+- **Optional advanced event-processing implementations:** Auto Loader and Lakeflow expectations for incremental JSON, plus `AUTO CDC` SCD2 on synthetic preferences. They are kept separate from the batch source path and need a configured Lakeflow Pipeline to run.
 - **CDC correctness:** sequence events by business event time/sequence and use delete handling; SCD2 is not identical to a simple SQL `MERGE`.
 
 ## Limitations / decisions
 - No transactional guarantee across separate CTAS outputs: a failure after a subset of tables can temporarily leave inconsistent generations. A stronger production design would use publishing strategies, quality gates and a controlled switch/refresh window.
 - Rerunning Silver/Gold is deterministic for fixed Bronze inputs; repeated source key updates that tie on ingestion timestamp are resolved by secondary sort columns, and further source-specific sequence metadata would be preferable.
-- SQL Gold materialization is CTAS, not a streaming materialized view; the MV decision is covered in exam docs.
+- SQL Gold materialization is CTAS, not a streaming materialized view; materialized-view alternatives require separate evaluation.
 - Fully managed Olist historical data is small compared with enterprise-scale production; performance exercises require larger workloads and measured timings.
 - The pipeline has no automated legally compliant data subject deletion flow. See [security](security.md).
 

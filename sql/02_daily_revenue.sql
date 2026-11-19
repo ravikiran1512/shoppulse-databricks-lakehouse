@@ -1,4 +1,4 @@
--- ShopPulse, Module 1 / Lesson 1 / Challenge 1
+-- ShopPulse: delivered-order daily revenue reference query
 -- Business question: daily revenue, order count, and distinct purchasing
 -- customers, considering only Delivered orders.
 

@@ -1,6 +1,6 @@
 # ShopPulse security, privacy and governance
 
-**No production security certification is claimed.**
+**Production security controls have not undergone a formal audit.**
 
 1. **Least privilege:** provide analysts SELECT on approved Gold objects, not unrestricted Bronze volume access. Use Unity Catalog grants and inheritance deliberately; refer to `sql/71_security_examples.sql` for read-only inspection.
 2. **PII classification:** treat customer identifiers, location and review text as potentially personal. Do not commit Olist raw CSVs, workspace logs, emails, tokens or screenshots to the public repository.
@@ -8,7 +8,7 @@
 4. **Secret management:** never embed Databricks PATs. Use Databricks auth profiles locally and approved workload identity / GitHub environments for future deployments. CI here deliberately does not deploy.
 5. **Retention:** establish documented data and audit retention periods. `VACUUM` affects old files and Delta time-travel availability; do not disable retention safeguards.
 6. **Erasure:** a right-to-erasure workflow requires identifying subjects, deleting relevant rows in all copies/snapshots and downstream systems, honoring legal retention, and validating purge. This repo does **not** implement compliant erasure.
-7. **External sharing:** Delta Sharing / OpenSharing and Clean Rooms require approved recipients, governance review, and controlled credentials. These are exam topics, not deployed assets in this repo.
+7. **External sharing:** Delta Sharing / OpenSharing and Clean Rooms require approved recipients, governance review, and controlled credentials. These are potential platform integrations, not deployed assets in this repository.
 8. **Supply chain:** treat source CSV/JSON as untrusted, validate input schema, pin reviewed dependencies when introduced, and restrict execution privileges.
 
 ## GitHub publishing checklist

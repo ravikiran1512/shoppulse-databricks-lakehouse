@@ -9,7 +9,7 @@
 
 ## Path A — Manually run in SQL Editor (most accessible in Free Edition)
 
-**1. Setup.** Open `sql/10_bronze_setup.sql`, replace all `{{catalog}}` with `workspace`, run the statements in SQL Editor in order. Existing `workspace.default` learning tables are not touched.
+**1. Setup.** Open `sql/10_bronze_setup.sql`, replace all `{{catalog}}` with `workspace`, run the statements in SQL Editor in order. Existing `workspace.default` reference tables are not touched.
 
 **2. Upload.** In Catalog Explorer open `workspace.shoppulse_bronze.source_files`. Upload all eight files to the root of the volume. Exact paths:
 
